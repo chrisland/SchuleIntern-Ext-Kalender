@@ -1,0 +1,71 @@
+{
+  "name": "Kalender",
+  "uniqid": "ext.zwiebelgasse.kalender",
+  "version": "1",
+
+  "requiredVersion": "1.4.1",
+
+  "menu": {
+    "categorie": "1",
+    "icon": "fa fas fa-calender",
+    "params": ""
+  },
+
+  "adminGroupName": "Admin_Ext_Kalender",
+  "aclGroupName": "ext_kalender",
+
+
+  "submenu": [
+    {
+      "title": "Kalender",
+      "icon": "fa fa-calender",
+      "url": {
+        "page": "ext_kalender",
+        "params": {
+          "view": "default"
+        }
+      }
+    },
+
+    {
+      "title": "Admin",
+      "icon": "fa fa-cogs",
+      "admin": true,
+      "url": {
+        "page": "ext_kalender",
+        "params": {
+          "view": "default",
+          "admin": "true"
+        }
+      }
+    },
+    {
+      "title": "ACL",
+      "icon": "fa fa-cogs",
+      "admin": true,
+      "url": {
+        "page": "ext_kalender",
+        "params": {
+          "view": "acl",
+          "admin": "true"
+        }
+      }
+    },
+    {
+      "title": "List",
+      "icon": "fa fa-cogs",
+      "admin": true,
+      "url": {
+        "page": "ext_kalender",
+        "params": {
+          "view": "list",
+          "admin": "true"
+        }
+      }
+    }
+    
+  ]
+
+
+
+}
