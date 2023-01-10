@@ -1,10 +1,13 @@
-import Vue from 'vue';
-import App from './App.vue';
+import { createApp } from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import App from './App.vue'
 
-window.EventBus = new Vue();
-Vue.config.productionTip = false
+import $bus from './event.js';
 
-new Vue({
-  el: '#app',
-  render: h => h(App),
-});
+const app = createApp(App)
+
+app.config.globalProperties.$bus = $bus;
+
+app.use(VueAxios, axios)
+app.mount('#app')

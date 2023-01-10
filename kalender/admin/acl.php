@@ -22,16 +22,45 @@ class extKalenderAdminAcl extends AbstractPage {
             new errorPage('Kein Zugriff');
         }
 
+        $form = [
+            "desc" => "Welcher Benutzer kann die Kalender sehen (Lesen) und neue Einträge hinzufügen(Schreiben)? Einzelne Kalender werden separat gesteuert.",
+            "acl" => [
+                "schueler" => [
+                    "read" => 1,
+                    "write" => 1,
+                    "delete" => 1,
+                ],
+                "lehrer" => [
+                    "read" => 1,
+                    "write" => 1,
+                    "delete" => 1,
+                ],
+                "eltern" => [
+                    "read" => 1,
+                    "write" => 1,
+                    "delete" => 1,
+                ],
+                "none" => [
+                    "read" => 1,
+                    "write" => 1,
+                    "delete" => 1,
+                ]
+            ]
+        ];
+
 		$this->render([
 			"tmplHTML" => '<div class="box"><div class="box-body"><div id=app></div></div></div>',
 			"scripts" => [
-				PATH_COMPONENTS.'system/adminAcl/dist/main.js'
+				//PATH_COMPONENTS.'system/adminAcl/dist/main.js',
+                PATH_COMPONENTS.'system/adminAcl2/dist/js/chunk-vendors.js',
+                PATH_COMPONENTS.'system/adminAcl2/dist/js/app.js'
 			],
 			"data" => [
-				"selfURL" => URL_SELF,
-				"acl" => $this->getAclAll(),
-				"globalAdminGroup" => $this->getAdminGroupUsers('Webportal_Administrator'),
-				"extensionAdminGroup" => $this->getAdminGroupUsers(self::getAdminGroup())
+                "selfURL" => URL_SELF,
+                "form" => $form,
+                "acl" => $this->getAclAll(),
+                "adminList" => self::getGroupMembers('Webportal_Administrator'),
+                "adminExtension" => self::getGroupMembers(self::getAdminGroup())
 			]
 		]);
 

@@ -3,11 +3,11 @@
   "uniqid": "ext.zwiebelgasse.kalender",
   "version": "1",
 
-  "requiredVersion": "1.4.1",
+  "requiredVersion": "1.5.2",
 
   "menu": {
     "categorie": "1",
-    "icon": "fa fas fa-calender",
+    "icon": "fa fas fa-calendar-star",
     "params": ""
   },
 
@@ -18,7 +18,7 @@
   "submenu": [
     {
       "title": "Kalender",
-      "icon": "fa fa-calender",
+      "icon": "fa fa-calendar",
       "url": {
         "page": "ext_kalender",
         "params": {
@@ -28,20 +28,20 @@
     },
 
     {
-      "title": "Admin",
-      "icon": "fa fa-cogs",
+      "title": "Import",
+      "icon": "fa fa-sync",
       "admin": true,
       "url": {
         "page": "ext_kalender",
         "params": {
-          "view": "default",
+          "view": "import",
           "admin": "true"
         }
       }
     },
     {
       "title": "ACL",
-      "icon": "fa fa-cogs",
+      "icon": "fa fa-user-shield",
       "admin": true,
       "url": {
         "page": "ext_kalender",
@@ -52,7 +52,7 @@
       }
     },
     {
-      "title": "List",
+      "title": "Kalender",
       "icon": "fa fa-cogs",
       "admin": true,
       "url": {

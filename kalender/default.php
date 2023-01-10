@@ -3,7 +3,7 @@
 class extKalenderDefault extends AbstractPage {
 	
 	public static function getSiteDisplayName() {
-		return '<i class="fa fas fa-plug"></i> Kalender';
+		return '<i class="fas fa fa-calendar"></i> Kalender';
 	}
 
 	public function __construct($request = [], $extension = []) {
@@ -29,7 +29,8 @@ class extKalenderDefault extends AbstractPage {
         $this->render([
             "tmpl" => "default",
             "scripts" => [
-                PATH_EXTENSION.'tmpl/scripts/default/dist/main.js'
+                PATH_EXTENSION . 'tmpl/scripts/kalender/dist/js/chunk-vendors.js',
+                PATH_EXTENSION . 'tmpl/scripts/kalender/dist/js/app.js'
             ],
             "data" => [
                 "apiURL" => "rest.php/kalender",

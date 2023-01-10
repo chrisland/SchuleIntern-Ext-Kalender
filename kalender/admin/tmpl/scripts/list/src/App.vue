@@ -1,46 +1,12 @@
 <template>
+
   <div>
+    <AjaxError v-bind:error="error"></AjaxError>
+    <AjaxSpinner v-bind:loading="loading"></AjaxSpinner>
 
-    <Error v-bind:error="error"></Error>
-    <Spinner v-bind:loading="loading"></Spinner>
 
-    <button class="si-btn" v-on:click="handlerAdd"><i class="fa fa-plus"></i> Neuer Kalender</button>
-    <form class="list"  v-if="list.length > 0" v-on:change="handlerChange">
-
-      <table class="si-table">
-        <thead>
-        <tr>
-          <td>Title</td>
-          <td>Farbe</td>
-          <td>Sortierung</td>
-          <td>Vorausgewählt</td>
-          <td>Ferien</td>
-          <td>Veröffentlichen (ICS)</td>
-          <td>Status</td>
-          <td>Status</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-bind:key="index" v-for="(item, index) in  list"
-            class="">
-          <td><input type="text" v-model="item.title"></td>
-          <td><input type="text" v-model="item.color"></td>
-          <td><input type="text" v-model="item.sort"></td>
-          <td>
-            <button class="si-btn si-btn-off"><i class="fas "></i> Aus </button>
-            {{item.preSelect}}</td>
-          <td>{{item.ferien}}</td>
-          <td>{{item.public}}</td>
-          <td>{{item.state}}</td>
-          <td>
-            <button class="si-btn si-btn-light" v-on:click="handlerDelete"><i class="fa"></i> Löschen</button>
-            <button class="si-btn si-btn-red hidden"><i class="fa"></i> Wirklich Löschen</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-
-    </form>
+    <ListComponent v-if="page === 'list'" :acl="acl" :list="list"></ListComponent>
+    <ItemComponent v-if="page === 'item'" :acl="acl" :item="item"></ItemComponent>
 
 
   </div>
@@ -48,68 +14,69 @@
 
 <script>
 
-const axios = require('axios').default;
+import AjaxError from './mixins/AjaxError.vue'
+import AjaxSpinner from './mixins/AjaxSpinner.vue'
 
-import Error from './mixins/Error.vue'
-import Spinner from './mixins/Spinner.vue'
+import ListComponent from './components/ListComponent.vue'
+import ItemComponent from './components/ItemComponent.vue'
+
+const axios = require('axios').default;
 
 
 export default {
+
+  name: 'App',
   components: {
-    Error, Spinner
+    AjaxError, AjaxSpinner,
+    ListComponent, ItemComponent
   },
   data() {
     return {
-      apiURL: globals.apiURL,
+      apiURL: window.globals.apiURL,
+      acl: window.globals.acl,
       error: false,
       loading: false,
+      page: 'list',
 
-      list: []
+      list: false,
+      item: []
 
     };
   },
-  created: function () {
-    this.loadData();
-  },
-  mounted() {
+  created() {
+    this.loadList();
 
-  },
-  methods: {
 
-    handlerAdd: function () {
+    this.$bus.$on('page--open', data => {
+      if (data.item) {
+        this.item = data.item;
+      } else {
+        this.item = {
+          id: 0,
+          title: ''
+        };
+      }
+      this.handlerPage(data.page);
+    });
 
-      this.list.push( {'title': ''} );
 
-    },
-    handlerDelete: function () {
-
-    },
-    handlerDeleteSubmit: function () {
-
-    },
-
-    handlerChange: function () {
-
-      console.log('change!');
-    },
-    loadData: function () {
+    this.$bus.$on('item--add-holiday', () => {
 
       this.loading = true;
       var that = this;
-
-      axios.get( this.apiURL+'/getKalender')
-          .then(function(response){
-            if ( response.data ) {
-              if (!response.data.error) {
-                that.list = response.data;
+      axios.get(this.apiURL + '/setAdminFerien')
+          .then(function (response) {
+            if (response.data) {
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
               } else {
-                that.error = ''+response.data.msg;
+                that.loadList();
               }
             } else {
               that.error = 'Fehler beim Laden. 01';
             }
           })
-          .catch(function(){
+          .catch(function () {
             that.error = 'Fehler beim Laden. 02';
           })
           .finally(function () {
@@ -117,11 +84,247 @@ export default {
             that.loading = false;
           });
 
-    }
+    });
+
+    this.$bus.$on('item--sort', data => {
+
+      if (!data.items) {
+        console.log('missing');
+        return false;
+      }
+
+      let arr = [];
+      let i = 1;
+      data.items.forEach((item)=> {
+        arr.push({
+          'id': item.id,
+          'sort': i
+        });
+        i++;
+      })
+      const formData = new FormData();
+      formData.append('items', JSON.stringify(arr) );
+
+      this.loading = true;
+      var that = this;
+      axios.post(this.apiURL + '/setAdminKalenderSort', formData)
+          .then(function (response) {
+            if (response.data) {
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+                that.loadList();
+              }
+            } else {
+              that.error = 'Fehler beim Speichern. 01';
+            }
+          })
+          .catch(function () {
+            that.error = 'Fehler beim Speichern. 02';
+          })
+          .finally(function () {
+            that.loading = false;
+          });
+
+    });
+
+    this.$bus.$on('item--state', data => {
+
+      if (!data.item.id) {
+        console.log('missing');
+        return false;
+      }
+      const formData = new FormData();
+      formData.append('id', data.item.id);
+      formData.append('state', data.item.state);
+
+      this.loading = true;
+      var that = this;
+      axios.post(this.apiURL + '/setAdminKalenderState', formData)
+          .then(function (response) {
+            if (response.data) {
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+
+                //console.log('DONE');
+
+              }
+            } else {
+              that.error = 'Fehler beim Speichern. 01';
+            }
+          })
+          .catch(function () {
+            that.error = 'Fehler beim Speichern. 02';
+          })
+          .finally(function () {
+            that.loading = false;
+          });
+
+    });
+
+    this.$bus.$on('item--submit', data => {
+
+      if (!data.item.title) {
+        console.log('missing');
+        return false;
+      }
+
+      const formData = new FormData();
+      formData.append('id', data.item.id);
+      formData.append('title', data.item.title);
+      formData.append('state', data.item.state);
+      formData.append('color', data.item.color);
+      formData.append('sort', data.item.sort);
+      formData.append('preSelect', data.item.preSelect);
+      formData.append('acl', data.item.acl);
+      formData.append('ferien', data.item.ferien);
+      formData.append('public', data.item.public);
+
+      this.loading = true;
+      var that = this;
+      axios.post(this.apiURL + '/setAdminKalender', formData)
+          .then(function (response) {
+            if (response.data) {
+
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+
+                that.loadList();
+                if (data.callback) {
+                  data.callback(response.data);
+                }
+
+              }
+            } else {
+              that.error = 'Fehler beim Speichern. 01';
+            }
+          })
+          .catch(function () {
+            that.error = 'Fehler beim Speichern. 02';
+          })
+          .finally(function () {
+            // always executed
+            that.loading = false;
+          });
+
+
+    });
+
+
+    this.$bus.$on('item--delete', data => {
+
+      if (!data.item.id) {
+        console.log('missing');
+        return false;
+      }
+
+      const formData = new FormData();
+      formData.append('id', data.item.id);
+
+      this.loading = true;
+      var that = this;
+      axios.post(this.apiURL + '/deleteAdminKalender', formData)
+          .then(function (response) {
+            if (response.data) {
+
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+                that.loadList();
+                that.handlerPage();
+              }
+            } else {
+              that.error = 'Fehler beim Speichern. 01';
+            }
+          })
+          .catch(function (e) {
+            console.log(e);
+            that.error = 'Fehler beim Speichern. 02';
+          })
+          .finally(function () {
+            // always executed
+            that.loading = false;
+          });
+
+    });
+
+    this.$bus.$on('item--acl', data => {
+
+      if (!data.id) {
+        console.log('missing');
+        return false;
+      }
+
+      const formData = new FormData();
+      formData.append('acl', JSON.stringify(data.acl));
+      formData.append('id', data.id);
+
+
+      this.loading = true;
+      var that = this;
+      axios.post(this.apiURL + '/setAdminKalenderAcl', formData)
+          .then(function (response) {
+            if (response.data) {
+
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+                console.log('done');
+              }
+            } else {
+              that.error = 'Fehler beim Speichern. 01';
+            }
+          })
+          .catch(function (e) {
+            console.log(e);
+            that.error = 'Fehler beim Speichern. 02';
+          })
+          .finally(function () {
+            // always executed
+            that.loading = false;
+          });
+
+
+    });
+
+
+  },
+  methods: {
+
+    loadList() {
+
+      this.loading = true;
+      var that = this;
+      axios.get(this.apiURL + '/getAdminKalenders')
+          .then(function (response) {
+            if (response.data) {
+              if (response.data.error) {
+                that.error = '' + response.data.msg;
+              } else {
+                that.list = response.data;
+              }
+            } else {
+              that.error = 'Fehler beim Laden. 01';
+            }
+          })
+          .catch(function () {
+            that.error = 'Fehler beim Laden. 02';
+          })
+          .finally(function () {
+            // always executed
+            that.loading = false;
+          });
+
+    },
+
+    handlerPage(page = 'list') {
+      this.page = page;
+    },
 
   }
-
-};
+}
 </script>
 
 <style>

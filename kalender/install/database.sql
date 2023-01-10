@@ -11,3 +11,22 @@ CREATE TABLE `ext_kalender`
     `public`    tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+
+CREATE TABLE `ext_kalender_events`
+(
+    `id`           int(11) NOT NULL AUTO_INCREMENT,
+    `kalender_id`  int(11) NOT NULL,
+    `titel`        varchar(255) NOT NULL,
+    `dateStart`    date         NOT NULL,
+    `timeStart`    time         NOT NULL,
+    `dateEnd`      date         NOT NULL,
+    `timeEnd`      time         NOT NULL,
+    `place`        varchar(255) NOT NULL,
+    `comment`      tinytext     NOT NULL,
+    `user_id`      int(11) NOT NULL,
+    `createdTime`  datetime     NOT NULL,
+    `modifiedTime` datetime     NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
