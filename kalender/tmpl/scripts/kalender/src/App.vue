@@ -223,8 +223,6 @@ export default {
       data.forEach((eintrag) => {
 
 
-
-
         if (eintrag.repeat_type) {
 
           var eintrag_start = new Date(eintrag.dateStart);
@@ -284,13 +282,31 @@ export default {
 
       data.forEach((eintrag, i) => {
         if (eintrag.dateStart) {
-          //eintrag.timeStart = that.$dayjs(eintrag.timeStart, 'HH:mm:ss', true).format('HH:mm');
-          //eintrag.timeEnde = that.$dayjs(eintrag.timeEnde, 'HH:mm:ss', true).format('HH:mm');
-          let monthName = that.$dayjs(eintrag.dateStart, 'YYYY-MM-DD', true).format('MM-YYYY');
-          if (!Array.isArray(months[monthName])) {
-            months[monthName] = [];
+
+          let monthNameStart = that.$dayjs(eintrag.dateStart, 'YYYY-MM-DD', true).format('MM-YYYY');
+
+          // Startmonat / Default
+          if (monthNameStart && !eintrag.dateEnd) {
+            if (!Array.isArray(months[monthNameStart])) {
+              months[monthNameStart] = [];
+            }
+            months[monthNameStart].push(eintrag);
           }
-          months[monthName].push(eintrag);
+
+          // Termin geht in den folgemonaten weiter
+          if (eintrag.dateEnd) {
+            let dateStart = that.$dayjs(eintrag.dateStart, 'YYYY-MM-DD', true);
+
+            let diff = that.$dayjs(eintrag.dateEnd, 'YYYY-MM-DD', true).get("month") - dateStart.get("month");
+            for(let i = 0; i <= diff; i++) {
+              let monthNameNext = dateStart.add(i, 'month').format('MM-YYYY');
+              if (!Array.isArray(months[monthNameNext])) {
+                months[monthNameNext] = [];
+              }
+              months[monthNameNext].push(eintrag);
+            }
+          }
+
         }
       });
 
@@ -352,10 +368,12 @@ export default {
 .dp__menu {
   font-size: inherit;
 }
+
 .dp__input_icons {
   width: 1.5rem;
   height: 1.5rem;
 }
+
 .dp__input_wrap input {
   padding: 1rem 3.6rem !important;
 }
@@ -371,7 +389,7 @@ export default {
 }
 
 .dp__action_row {
- flex-direction: column;
+  flex-direction: column;
 }
 
 .dp__action_row .dp__selection_preview {
@@ -381,18 +399,21 @@ export default {
   letter-spacing: 0.05rem;
   text-align: center;
 }
+
 .dp__action_row .dp__action_buttons {
   width: 100%;
 
 }
-.dp__action_row .dp__action_buttons .dp__action{
+
+.dp__action_row .dp__action_buttons .dp__action {
   font-weight: normal;
   font-family: inherit;
 }
-.dp__action_row .dp__action_buttons .dp__cancel{
+
+.dp__action_row .dp__action_buttons .dp__cancel {
   box-shadow: none;
   color: #8aa4af;
   border: 1px solid #b7c7ce;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>

@@ -17,7 +17,8 @@ class setAdminKalenderAcl extends AbstractRest {
         }
 
         $acl = $this->getAcl();
-        if ((int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
+        if ((int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
+        //if ((int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
                 'error' => true,
                 'msg' => 'Kein Zugriff'

@@ -1,13 +1,13 @@
 {
   "name": "Kalender",
   "uniqid": "ext.zwiebelgasse.kalender",
-  "version": "1",
+  "version": "4",
 
-  "requiredVersion": "1.5.2",
+  "requiredVersion": "1.5.1",
 
   "menu": {
     "categorie": "1",
-    "icon": "fa fas fa-calendar-star",
+    "icon": "fa fa-calendar",
     "params": ""
   },
 
@@ -26,6 +26,18 @@
         }
       }
     },
+    {
+      "title": "KlassenKalender",
+      "icon": "fa fa-calendar",
+      "url": {
+        "page": "ext_kalender",
+        "params": {
+          "view": "klassenkalender"
+        }
+      }
+    },
+
+
 
     {
       "title": "Import",

@@ -9,7 +9,6 @@
       <button class="si-btn" @click="nextMonth">Weiter <i class="fa fa-arrow-right"></i></button>
     </div>
 
-
     <table class="si-table si-table-style-allLeft">
       <thead>
       <tr>
@@ -199,6 +198,10 @@ export default {
 
         var ret = [];
         var that = this;
+
+
+
+
         this.events[monthName].forEach((eintrag) => {
 
 
@@ -249,6 +252,7 @@ export default {
           /*
               REPEAT
            */
+          //if (eintrag.repeat_type && eintrag_start <= date_day && eintrag_start >= date_day  ) {
           if (eintrag.repeat_type && +eintrag_start == +date_day) {
 
             newItem.repeat_root = [that.$dayjs(eintrag.dateStart, 'YYYY-MM-DD', true).format('YYYY-MM-DD'),
@@ -257,7 +261,6 @@ export default {
 
             ret.push(newItem);
           }
-
         });
 
 

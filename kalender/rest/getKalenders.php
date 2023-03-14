@@ -17,7 +17,8 @@ class getKalenders extends AbstractRest {
         }
 
         $acl = $this->getAcl();
-        if ( (int)$acl['rights']['read'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
+        if ((int)$acl['rights']['read'] !== 1 && (int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
+        //if ( (int)$acl['rights']['read'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
                 'error' => true,
                 'msg' => 'Kein Zugriff'
@@ -35,6 +36,11 @@ class getKalenders extends AbstractRest {
             foreach ($data as $item) {
                 $arr = $item->getCollection(true);
                 if ( $this->getGroupACL( $arr['acl']['groups'], $userType ) === 1 ) {
+
+                    if ((int)DB::getSession()->getUser()->isAnyAdmin() === 1) {
+                        $arr['acl']['rights'] = ['read' => 1, 'write' => 1, 'delete' => 1];
+                    }
+
                     $ret[] = $arr;
                 }
             }
