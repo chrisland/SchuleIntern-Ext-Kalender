@@ -17,9 +17,9 @@ class getAdminKalenders extends AbstractRest {
         }
 
         $acl = $this->getAcl();
-        if ((int)$acl['rights']['read'] !== 1 &&
-            (int)$acl['rights']['write'] !== 1 &&
-            (int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
+        if ( ((int)$acl['rights']['read'] !== 1 &&
+            (int)$acl['rights']['write'] !== 1) ||
+            DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true) {
 
             //if ( (int)$acl['rights']['read'] !== 1
             //&& (int)$acl['rights']['write'] !== 1

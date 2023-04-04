@@ -271,7 +271,8 @@ export default {
               if (response.data.error) {
                 that.error = '' + response.data.msg;
               } else {
-                console.log('done');
+                //console.log('done');
+                that.loadList();
               }
             } else {
               that.error = 'Fehler beim Speichern. 01';

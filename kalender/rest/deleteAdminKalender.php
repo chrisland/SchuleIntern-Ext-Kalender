@@ -17,7 +17,7 @@ class deleteAdminKalender extends AbstractRest {
         }
 
         $acl = $this->getAcl();
-        if ((int)$acl['rights']['delete'] !== 1 && (int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
+        if ((int)$acl['rights']['delete'] !== 1 || (int)DB::getSession()->getUser()->isAdmin() || (int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
         //if ((int)$acl['rights']['delete'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
                 'error' => true,

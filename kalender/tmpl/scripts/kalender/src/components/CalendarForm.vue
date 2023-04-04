@@ -200,7 +200,7 @@ export default {
     checkAcl(acl) {
 
       if (acl && acl.rights) {
-        console.log(acl);
+        //console.log(acl);
         if (parseInt(acl.rights.write) === 1) {
           return true;
         }

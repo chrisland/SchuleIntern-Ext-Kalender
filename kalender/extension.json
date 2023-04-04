@@ -1,9 +1,9 @@
 {
   "name": "Kalender",
   "uniqid": "ext.zwiebelgasse.kalender",
-  "version": "4",
+  "version": "6",
 
-  "requiredVersion": "1.5.1",
+  "requiredVersion": "1.5.3",
 
   "menu": {
     "categorie": "1",
@@ -14,6 +14,12 @@
   "adminGroupName": "Admin_Ext_Kalender",
   "aclGroupName": "ext_kalender",
 
+  "cron": [
+    {
+      "typ": "default",
+      "class": "extKalenderCronFetchHoliday"
+    }
+  ],
 
   "submenu": [
     {
@@ -27,6 +33,7 @@
       }
     },
     {
+      "hidden": "true",
       "title": "KlassenKalender",
       "icon": "fa fa-calendar",
       "url": {

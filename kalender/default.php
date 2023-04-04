@@ -18,7 +18,7 @@ class extKalenderDefault extends AbstractPage {
         //print_r($_request);
 
         $acl = $this->getAcl();
-        if ((int)$acl['rights']['read'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
+        if ((int)$acl['rights']['read'] !== 1 || DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
             new errorPage('Kein Zugriff');
         }
 

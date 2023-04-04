@@ -80,15 +80,24 @@ export default {
         return false;
       }
 
+      let startTime = '';
+      if (data.form.startTime) {
+        startTime = data.form.startTime.hours+':'+data.form.startTime.minutes
+      }
+      let endTime = false;
+      if (data.form.endTime) {
+        endTime = data.form.endTime.hours+':'+data.form.endTime.minutes
+      }
+
       const formData = new FormData();
 
       formData.append('id', data.form.id || '');
       formData.append('title', data.form.title || '');
       formData.append('kalender_id', data.form.calenderID || '');
       formData.append('dateStart', data.form.startDay || '');
-      formData.append('timeStart', data.form.startTime || '');
+      formData.append('timeStart', startTime || '');
       formData.append('dateEnd', data.form.endDay || '');
-      formData.append('endTime', data.form.endTime || '');
+      formData.append('timeEnd', endTime || '');
       formData.append('place', data.form.place || '');
       formData.append('comment', data.form.comment || '');
       formData.append('repeat_type', data.form.repeat_type || '');
