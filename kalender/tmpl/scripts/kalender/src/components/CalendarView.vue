@@ -139,7 +139,7 @@ export default {
       if (!eintrag) {
         return false;
       }
-      if (this.acl.write != 1) {
+      if (this.acl.read != 1) {
         return false;
       }
       this.$bus.$emit('event-item--open', {

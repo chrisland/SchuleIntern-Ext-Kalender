@@ -84,7 +84,7 @@ class extKalenderCronFetchHoliday extends AbstractCron
 
     public function executeEveryXSeconds()
     {
-        return 2;        // Alle 2 Wochen ausführen.
+        return 86400;        // 1 mal am tag
     }
 
 

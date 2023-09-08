@@ -17,6 +17,13 @@ class setAdminKalenderSort extends AbstractRest {
         }
 
         $acl = $this->getAcl();
+        if ( !$this->canAdmin() ) {
+            return [
+                'error' => true,
+                'msg' => 'Kein Zugriff'
+            ];
+        }
+        /*
         if ( DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
         //if ((int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
@@ -24,6 +31,7 @@ class setAdminKalenderSort extends AbstractRest {
                 'msg' => 'Kein Zugriff'
             ];
         }
+        */
 
 
         $items = json_decode($_POST['items']);

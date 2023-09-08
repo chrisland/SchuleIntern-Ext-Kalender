@@ -17,6 +17,24 @@ class deleteAdminKalender extends AbstractRest {
         }
 
         $acl = $this->getAcl();
+
+        if ( !$this->canDelete() ) {
+            return [
+                'error' => true,
+                'msg' => 'Kein Zugriff'
+            ];
+        }
+        /*
+        if ( DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
+            if ((int)$acl['rights']['delete'] !== 1) {
+                return [
+                    'error' => true,
+                    'msg' => 'Kein Zugriff'
+                ];
+            }
+        }
+        */
+        /*
         if ((int)$acl['rights']['delete'] !== 1 || (int)DB::getSession()->getUser()->isAdmin() || (int)DB::getSession()->isMember($this->extension['adminGroupName']) !== 1 ) {
         //if ((int)$acl['rights']['delete'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
@@ -24,6 +42,7 @@ class deleteAdminKalender extends AbstractRest {
                 'msg' => 'Kein Zugriff'
             ];
         }
+        */
 
 
         $id = (int)$input['id'];

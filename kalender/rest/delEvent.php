@@ -16,13 +16,30 @@ class delEvent extends AbstractRest {
         }
 
         $acl = $this->getAcl();
-        if ((int)$acl['rights']['delete'] !== 1 || DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
-        //if ((int)$acl['rights']['delete'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
+
+        if ( !$this->canDelete() ) {
             return [
                 'error' => true,
                 'msg' => 'Kein Zugriff'
             ];
         }
+        /*
+        if ( DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
+            if ((int)$acl['rights']['delete'] !== 1) {
+                return [
+                    'error' => true,
+                    'msg' => 'Kein Zugriff'
+                ];
+            }
+        }
+        */
+
+        /*
+        if ((int)$acl['rights']['delete'] !== 1 || DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
+        //if ((int)$acl['rights']['delete'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
+
+        }
+        */
 
 
 

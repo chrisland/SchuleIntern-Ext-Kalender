@@ -17,6 +17,15 @@ class getAdminKalenders extends AbstractRest {
         }
 
         $acl = $this->getAcl();
+
+        if ( !$this->canAdmin() ) {
+            return [
+                'error' => true,
+                'msg' => 'Kein Zugriff'
+            ];
+        }
+
+        /*
         if ( ((int)$acl['rights']['read'] !== 1 &&
             (int)$acl['rights']['write'] !== 1) ||
             DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true) {
@@ -29,6 +38,7 @@ class getAdminKalenders extends AbstractRest {
                 'msg' => 'Kein Zugriff'
             ];
         }
+        */
 
         include_once PATH_EXTENSION . 'models' . DS . 'Kalender.class.php';
 

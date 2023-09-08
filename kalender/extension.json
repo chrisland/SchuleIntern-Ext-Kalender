@@ -1,7 +1,7 @@
 {
   "name": "Kalender",
   "uniqid": "ext.zwiebelgasse.kalender",
-  "version": "6",
+  "version": "7",
 
   "requiredVersion": "1.5.3",
 
@@ -18,6 +18,25 @@
     {
       "typ": "default",
       "class": "extKalenderCronFetchHoliday"
+    }
+  ],
+
+  "widgets": [
+    {
+      "title": "Counter",
+      "uniqid": "kalender.counter",
+      "position": "header",
+      "class": "extKalenderWidgetCounter",
+      "params": {}
+    },
+    {
+      "title": "Dashboard",
+      "uniqid": "kalender.dashboard",
+      "position": "dashboard",
+      "params": {
+        "minH": 2,
+        "minW": 4
+      }
     }
   ],
 

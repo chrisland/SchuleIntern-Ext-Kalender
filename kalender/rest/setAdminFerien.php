@@ -17,6 +17,13 @@ class setAdminFerien extends AbstractRest {
         }
 
         $acl = $this->getAcl();
+        if ( !$this->canWrite() ) {
+            return [
+                'error' => true,
+                'msg' => 'Kein Zugriff'
+            ];
+        }
+        /*
         if ( (int)$acl['rights']['write'] !== 1 || DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
         //if ((int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
@@ -24,6 +31,7 @@ class setAdminFerien extends AbstractRest {
                 'msg' => 'Kein Zugriff'
             ];
         }
+        */
 
 
 

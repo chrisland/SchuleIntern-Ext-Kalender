@@ -17,6 +17,13 @@ class setAdminKalender extends AbstractRest {
         }
 
         $acl = $this->getAcl();
+        if ( !$this->canWrite() ) {
+            return [
+                'error' => true,
+                'msg' => 'Kein Zugriff'
+            ];
+        }
+        /*
         if ((int)$acl['rights']['write'] !== 1 || DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== true ) {
         //if ((int)$acl['rights']['write'] !== 1 && (int)DB::getSession()->getUser()->isAnyAdmin() !== 1 ) {
             return [
@@ -24,6 +31,7 @@ class setAdminKalender extends AbstractRest {
                 'msg' => 'Kein Zugriff'
             ];
         }
+        */
 
 
         $id = (int)$input['id'];

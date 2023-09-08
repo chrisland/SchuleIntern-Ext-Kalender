@@ -108,6 +108,26 @@ class extKalenderModelKalender
     /**
      * @return Array[]
      */
+    public static function getAllAllowed($state = false) {
+
+        $kalenderDB = self::getAll($state);
+        $kalenders = [];
+        if (count($kalenderDB) > 0) {
+            foreach ($kalenderDB as $item) {
+                $arr = $item->getCollection(true);
+                if ( (int)$arr['acl']['rights']['read'] === 1) {
+                    $kalenders[] = $arr;
+                }
+            }
+        }
+        return $kalenders;
+    }
+
+
+
+    /**
+     * @return Array[]
+     */
     public static function getAll($state = false) {
 
         /*

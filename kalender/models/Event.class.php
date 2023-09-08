@@ -128,6 +128,30 @@ class extKalenderModelEvent
     }
 
 
+    public static function getDayByKalender($date = false, $kalenderIDs = false) {
+
+        if (!$date) {
+            return false;
+        }
+
+        $where = [];
+        foreach($kalenderIDs as $k_id) {
+            $where[] = ' kalender_id = '.(int)$k_id;
+        }
+        $where = implode(' OR ',$where);
+
+        $ret =  [];
+        $dataSQL = DB::getDB()->query("SELECT  a.*
+            FROM ext_kalender_events as a
+            WHERE (".$where.") AND dateStart = '".$date."'
+            ORDER BY a.dateStart ");
+        while ($data = DB::getDB()->fetch_array($dataSQL, true)) {
+            $ret[] = new self($data);
+        }
+        return $ret;
+
+    }
+
 
     /**
      * @return Array[]
@@ -138,14 +162,11 @@ class extKalenderModelEvent
             return false;
         }
 
-
         $where = [];
-
         foreach($kalenderIDs as $k_id) {
             $where[] = ' kalender_id = '.(int)$k_id;
         }
         $where = implode(' OR ',$where);
-
 
         $ret =  [];
         $dataSQL = DB::getDB()->query("SELECT  a.*
@@ -157,6 +178,7 @@ class extKalenderModelEvent
         }
         return $ret;
     }
+
 
     public static function submitData($array = false, $user_id = false) {
 
