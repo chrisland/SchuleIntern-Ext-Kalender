@@ -173,6 +173,13 @@ export default {
     this.$bus.$on('event-form--open', data => {
       if (data.form) {
         that.form = data.form;
+
+        let dateStart = that.form.startTime.split(':');
+        that.form.startTime = { "hours": dateStart[0], "minutes": dateStart[1], "seconds": 0 };
+
+        let dateEnd = that.form.endTime.split(':');
+        that.form.endTime = { "hours": dateEnd[0], "minutes": dateEnd[1], "seconds": 0 };
+
       }
 
       that.open = true;

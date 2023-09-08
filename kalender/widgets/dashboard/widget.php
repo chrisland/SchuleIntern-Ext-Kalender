@@ -19,7 +19,7 @@ class extKalenderWidgetDashboard extends Widget
         $today = date('Y-m-d', time());
 
         echo '<script>window._widget_kalender_events = {}; </script>';
-        self::loadDate("today", "2023-03-28", $kalenders);
+        self::loadDate("today", $today, $kalenders);
 
 
 
