@@ -48,23 +48,22 @@ class getKalenders extends AbstractRest {
         */
 
 
-
         include_once PATH_EXTENSION . 'models' . DS . 'Kalender.class.php';
         $data = extKalenderModelKalender::getAll(1);
         $userType = DB::getSession()->getUser()->getUserTyp(true);
+        $isAdmin = false;
+        if ( DB::getSession()->isAdminOrGroupAdmin($this->getAdminGroup()) ) {
+            $isAdmin = true;
+        }
         $ret = [];
         if (count($data) > 0) {
             foreach ($data as $item) {
                 $arr = $item->getCollection(true);
-                if ( $this->getGroupACL( $arr['acl']['groups'], $userType ) === 1 ) {
 
-
-
-                    if ( DB::getSession()->isAdminOrGroupAdmin($this->extension['adminGroupName']) !== false ) {
-                    //if ((int)DB::getSession()->getUser()->isAnyAdmin() === 1) {
+                if ( $isAdmin || $this->getGroupACL( $arr['acl']['groups'], $userType ) === 1  ) {
+                    if ( $isAdmin ) {
                         $arr['acl']['rights'] = ['read' => 1, 'write' => 1, 'delete' => 1];
                     }
-
                     $ret[] = $arr;
                 }
             }
@@ -73,7 +72,8 @@ class getKalenders extends AbstractRest {
 	}
 
     function getGroupACL($groups,$userType) {
-        if ((int)DB::getSession()->getUser()->isAnyAdmin() === 1) {
+
+        if ( DB::getSession()->isAdminOrGroupAdmin($this->getAclGroup()) === true) {
             return 1;
         }
         if ($userType == 'isPupil') {
